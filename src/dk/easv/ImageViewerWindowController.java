@@ -35,11 +35,6 @@ public class ImageViewerWindowController
         displayImage();
     }
 
-    private void initialize() {
-        timeline = new Timeline(new KeyFrame(Duration.seconds(3), this::handleAutoSlideshow));
-        timeline.setCycleCount(Timeline.INDEFINITE);
-    }
-
     @FXML
     private void handleBtnLoadAction()
     {
