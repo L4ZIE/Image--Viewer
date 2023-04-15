@@ -94,7 +94,7 @@ public class ImageViewerWindowController
             while (true) {
                 try {
                     Thread.sleep(3000);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 handleAutoSlideshow(null);
