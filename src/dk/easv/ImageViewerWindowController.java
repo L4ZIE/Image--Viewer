@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -21,12 +22,12 @@ import javafx.util.Duration;
 public class ImageViewerWindowController
 {
     private final List<Image> images = new ArrayList<>();
+
     private int currentImageIndex = 0;
     private Timeline timeline;
     private Thread slideshowThread;
-
-    private Label filenameLabel;
-
+    @FXML
+    public Label filenameLabel;
     @FXML
     Parent root;
 
