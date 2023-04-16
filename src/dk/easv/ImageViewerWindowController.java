@@ -6,6 +6,7 @@ import java.util.List;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -31,8 +32,10 @@ public class ImageViewerWindowController
 
 
     private void handleAutoSlideshow(ActionEvent event) {
-        currentImageIndex = (currentImageIndex + 1) % images.size();
-        displayImage();
+        Platform.runLater(() -> {
+            currentImageIndex = (currentImageIndex + 1) % images.size();
+            displayImage();
+        });
     }
 
     @FXML
