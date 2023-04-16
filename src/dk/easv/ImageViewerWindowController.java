@@ -1,5 +1,6 @@
 package dk.easv;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ public class ImageViewerWindowController
     private int currentImageIndex = 0;
     private Timeline timeline;
     private Thread slideshowThread;
+
+    private Label filenameLabel;
 
     @FXML
     Parent root;
@@ -84,6 +87,9 @@ public class ImageViewerWindowController
         if (!images.isEmpty())
         {
             imageView.setImage(images.get(currentImageIndex));
+            //TODO check if it's right
+            String filename = new File(images.get(currentImageIndex).getUrl()).getName();
+            filenameLabel.setText("Filename: " + filename);
         }
     }
     @FXML
@@ -98,9 +104,11 @@ public class ImageViewerWindowController
                 handleAutoSlideshow(null);
             }
         });
+        slideshowThread.setDaemon(true);
         slideshowThread.start();
     }
 
+    //TODO fix, does not stop the slideshow
     @FXML
     private void handleBtnStopSlideshowAction() {
         if (slideshowThread != null) {
