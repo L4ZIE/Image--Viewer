@@ -22,6 +22,8 @@ import javafx.util.Duration;
 public class ImageViewerWindowController
 {
     private final List<Image> images = new ArrayList<>();
+    private volatile boolean continueSlideshow = true;
+
 
     private int currentImageIndex = 0;
     private Timeline timeline;
@@ -88,7 +90,6 @@ public class ImageViewerWindowController
         if (!images.isEmpty())
         {
             imageView.setImage(images.get(currentImageIndex));
-            //TODO check if it's right
             String filename = new File(images.get(currentImageIndex).getUrl()).getName();
             filenameLabel.setText("Filename: " + filename);
         }
@@ -96,7 +97,7 @@ public class ImageViewerWindowController
     @FXML
     private void handleBtnStartSlideshowAction() {
         slideshowThread = new Thread(() -> {
-            while (true) {
+            while (continueSlideshow) {
                 try {
                     Thread.sleep(3000);
                 } catch (Exception e) {
@@ -112,6 +113,7 @@ public class ImageViewerWindowController
     //TODO fix, does not stop the slideshow
     @FXML
     private void handleBtnStopSlideshowAction() {
+        continueSlideshow=false;
         if (slideshowThread != null) {
             slideshowThread.interrupt();
         }
