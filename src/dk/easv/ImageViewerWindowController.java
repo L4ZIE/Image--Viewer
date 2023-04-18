@@ -23,10 +23,7 @@ public class ImageViewerWindowController
 {
     private final List<Image> images = new ArrayList<>();
     private volatile boolean continueSlideshow = true;
-
-
     private int currentImageIndex = 0;
-    private Timeline timeline;
     private Thread slideshowThread;
     @FXML
     public Label filenameLabel;
@@ -110,7 +107,6 @@ public class ImageViewerWindowController
         slideshowThread.start();
     }
 
-    //TODO fix, does not stop the slideshow
     @FXML
     private void handleBtnStopSlideshowAction() {
         continueSlideshow=false;
