@@ -1,5 +1,6 @@
 package dk.easv;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -20,10 +22,13 @@ import javafx.util.Duration;
 public class ImageViewerWindowController
 {
     private final List<Image> images = new ArrayList<>();
+    private volatile boolean continueSlideshow = true;
+
     private int currentImageIndex = 0;
     private Timeline timeline;
     private Thread slideshowThread;
-
+    @FXML
+    public Label filenameLabel;
     @FXML
     Parent root;
 
@@ -84,12 +89,14 @@ public class ImageViewerWindowController
         if (!images.isEmpty())
         {
             imageView.setImage(images.get(currentImageIndex));
+            String filename = new File(images.get(currentImageIndex).getUrl()).getName();
+            filenameLabel.setText("Filename: " + filename);
         }
     }
     @FXML
     private void handleBtnStartSlideshowAction() {
         slideshowThread = new Thread(() -> {
-            while (true) {
+            while (continueSlideshow) {
                 try {
                     Thread.sleep(3000);
                 } catch (Exception e) {
@@ -98,11 +105,13 @@ public class ImageViewerWindowController
                 handleAutoSlideshow(null);
             }
         });
+        slideshowThread.setDaemon(true);
         slideshowThread.start();
     }
 
     @FXML
     private void handleBtnStopSlideshowAction() {
+        continueSlideshow=false;
         if (slideshowThread != null) {
             slideshowThread.interrupt();
         }
