@@ -1,27 +1,46 @@
 package dk.easv;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class ImageViewerWindowController
 {
     private final List<Image> images = new ArrayList<>();
-    private int currentImageIndex = 0;
 
+    private int currentImageIndex = 0;
+    private Timeline timeline;
+    private Thread slideshowThread;
+    @FXML
+    public Label filenameLabel;
     @FXML
     Parent root;
 
     @FXML
     private ImageView imageView;
+
+
+    private void handleAutoSlideshow(ActionEvent event) {
+        Platform.runLater(() -> {
+            currentImageIndex = (currentImageIndex + 1) % images.size();
+            displayImage();
+        });
+    }
 
     @FXML
     private void handleBtnLoadAction()
@@ -65,9 +84,38 @@ public class ImageViewerWindowController
 
     private void displayImage()
     {
+
         if (!images.isEmpty())
         {
             imageView.setImage(images.get(currentImageIndex));
+            //TODO check if it's right
+            String filename = new File(images.get(currentImageIndex).getUrl()).getName();
+            filenameLabel.setText("Filename: " + filename);
         }
     }
+    @FXML
+    private void handleBtnStartSlideshowAction() {
+        slideshowThread = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(3000);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                handleAutoSlideshow(null);
+            }
+        });
+        slideshowThread.setDaemon(true);
+        slideshowThread.start();
+    }
+
+    //TODO fix, does not stop the slideshow
+    @FXML
+    private void handleBtnStopSlideshowAction() {
+        if (slideshowThread != null) {
+            slideshowThread.interrupt();
+        }
+    }
+
+
 }
